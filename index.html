@@ -5,119 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ビンゴカード</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Noto+Sans+JP:wght@700;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #0d1b2a;
+      background: #f0f4ff;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Nunito', sans-serif;
-    }
-
-    .bg-glow {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, #1a3a5c 0%, #0d1b2a 70%);
-      z-index: 0;
-      pointer-events: none;
+      font-family: 'Noto Sans JP', sans-serif;
+      padding: 20px;
     }
 
     .app {
-      position: relative;
-      z-index: 1;
       width: 100%;
-      max-width: 420px;
-      padding: 24px 16px 40px;
+      max-width: 400px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
     }
 
-    /* タイトル */
-    .header {
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .header-title {
-      font-family: 'Boogaloo', cursive;
-      font-size: clamp(3rem, 18vw, 5rem);
-      letter-spacing: 0.18em;
-      line-height: 1;
-    }
-    .header-title .b1 { color: #ef5350; }
-    .header-title .b2 { color: #FFA726; }
-    .header-title .b3 { color: #66BB6A; }
-    .header-title .b4 { color: #42A5F5; }
-    .header-title .b5 { color: #AB47BC; }
-
-    /* ステータス */
-    .status-strip {
+    /* カード外枠 */
+    .card {
       width: 100%;
-      min-height: 54px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Boogaloo', cursive;
-      font-size: clamp(1.4rem, 6vw, 2rem);
-      letter-spacing: 0.12em;
-      margin-bottom: 10px;
-      transition: background 0.3s, border-color 0.3s;
-    }
-    .status-waiting {
-      background: #1a3652;
-      color: #546e7a;
-      border: 2px solid #1e4976;
-    }
-    .status-active {
-      background: #1a3652;
-      color: #78909c;
-      border: 2px solid #1e4976;
-      font-size: clamp(1rem, 4vw, 1.3rem);
-    }
-    .status-bingo {
-      background: linear-gradient(135deg, #f9a825, #ff6f00, #e53935);
-      color: #fff;
-      border: 2px solid #FFD54F;
-      animation: pulseGlow 1.2s ease-in-out infinite alternate;
-    }
-    @keyframes pulseGlow {
-      from { box-shadow: 0 0 16px #FFD54F88, 0 0 40px #ff8f0044; }
-      to   { box-shadow: 0 0 36px #FFD54Fff, 0 0 80px #ff8f0088; }
+      background: linear-gradient(160deg, #ff8c00, #ffb347);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.12);
+      border: 4px solid #fff;
+      position: relative;
     }
 
-    /* 列ラベル */
+    /* デコレーション星 */
+    .stars {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 2px;
+      letter-spacing: 4px;
+    }
+
+    /* BINGOタイトル */
+    .bingo-title {
+      text-align: center;
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(3rem, 16vw, 4.5rem);
+      letter-spacing: 0.15em;
+      line-height: 1;
+      margin-bottom: 8px;
+      -webkit-text-stroke: 3px #c8000a;
+      color: #ff1a1a;
+      text-shadow: 3px 3px 0 #7a0000, 0 0 20px rgba(255,100,0,0.3);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    /* グリッドヘッダー */
     .grid-header {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 4px;
-      width: 100%;
       margin-bottom: 4px;
     }
     .col-label {
+      background: #fff;
+      border-radius: 8px;
       text-align: center;
       font-family: 'Boogaloo', cursive;
-      font-size: clamp(1.2rem, 5vw, 1.6rem);
-      padding: 4px 0;
+      font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+      color: #cc0000;
+      padding: 4px 2px;
+      font-weight: bold;
     }
-    .col-label:nth-child(1) { color: #ef5350; }
-    .col-label:nth-child(2) { color: #FFA726; }
-    .col-label:nth-child(3) { color: #66BB6A; }
-    .col-label:nth-child(4) { color: #42A5F5; }
-    .col-label:nth-child(5) { color: #AB47BC; }
 
     /* グリッド */
     .grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 4px;
-      width: 100%;
     }
 
     .cell {
@@ -127,84 +92,141 @@
       align-items: center;
       justify-content: center;
       font-family: 'Boogaloo', cursive;
-      font-size: clamp(1.1rem, 5vw, 1.6rem);
+      font-size: clamp(1.2rem, 5.5vw, 1.7rem);
+      font-weight: bold;
       cursor: pointer;
       user-select: none;
-      transition: transform 0.12s, background 0.2s, border-color 0.2s;
-      border: 2px solid transparent;
+      transition: transform 0.12s, background 0.15s;
+      border: 2px solid rgba(0,0,0,0.08);
     }
+
     .cell-empty {
-      background: #1c2f45;
-      color: #37474f;
-      border-color: #1e3a52;
+      background: #ffe0b2;
+      color: #ccc;
       cursor: default;
     }
+
     .cell-unset {
-      background: #1a3652;
-      color: #90a4ae;
-      border-color: #1e4976;
+      background: #fff;
+      color: #222;
     }
     .cell-unset:hover {
-      transform: scale(1.06);
-      border-color: #4fc3f7;
-      color: #e0f7fa;
+      transform: scale(1.07);
+      background: #fff9c4;
     }
-    .cell-unset:active { transform: scale(0.93); }
+    .cell-unset:active { transform: scale(0.94); }
+
     .cell-hit {
-      background: linear-gradient(135deg, #0288d1, #00acc1);
+      background: linear-gradient(135deg, #ff6600, #ff9900);
       color: #fff;
-      border-color: #4fc3f7;
-      box-shadow: 0 0 14px #4fc3f766;
+      border-color: #cc4400;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.15);
     }
-    .cell-hit:active { transform: scale(0.93); }
+    .cell-hit:active { transform: scale(0.94); }
+
     .cell-free {
-      background: linear-gradient(135deg, #f9a825, #ff8f00);
-      color: #fff;
-      border-color: #FFD54F;
-      box-shadow: 0 0 14px #FFD54F66;
-      font-size: clamp(0.65rem, 2.8vw, 0.9rem);
-      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
+      color: #7a4000;
+      border-color: #cc8800;
+      font-size: clamp(0.65rem, 2.8vw, 0.85rem);
+      font-family: 'Noto Sans JP', sans-serif;
       font-weight: 900;
       cursor: default;
-      letter-spacing: 0.04em;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.15);
     }
+
     .cell-bingo {
+      background: linear-gradient(135deg, #e53935, #ff6f00);
+      color: #fff;
+      border-color: #b71c1c;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      box-shadow: 0 0 12px rgba(255,80,0,0.5), inset 0 -3px 0 rgba(0,0,0,0.15);
+      animation: cellPulse 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes cellPulse {
+      from { box-shadow: 0 0 8px rgba(255,80,0,0.4); }
+      to   { box-shadow: 0 0 18px rgba(255,80,0,0.8); }
+    }
+
+    /* ステータス */
+    .status-area {
+      width: 100%;
+      margin-top: 14px;
+    }
+
+    .status-box {
+      border-radius: 14px;
+      padding: 12px 16px;
+      text-align: center;
+      font-weight: 900;
+      font-size: clamp(1rem, 4.5vw, 1.3rem);
+      letter-spacing: 0.05em;
+      transition: all 0.3s;
+    }
+
+    .status-waiting {
+      background: #fff;
+      color: #999;
+      border: 2px dashed #ddd;
+    }
+
+    .status-active {
+      background: #fff;
+      color: #555;
+      border: 2px solid #ddd;
+      font-size: clamp(0.85rem, 3.5vw, 1rem);
+    }
+
+    .status-bingo {
       background: linear-gradient(135deg, #ff6f00, #e53935);
       color: #fff;
-      border-color: #FFD54F;
-      box-shadow: 0 0 18px #FFD54F88;
+      border: 3px solid #FFD700;
+      box-shadow: 0 0 24px rgba(255,180,0,0.6);
+      animation: statusPulse 1s ease-in-out infinite alternate;
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(1.6rem, 7vw, 2.2rem);
+      letter-spacing: 0.1em;
+    }
+    @keyframes statusPulse {
+      from { box-shadow: 0 0 16px rgba(255,180,0,0.5); }
+      to   { box-shadow: 0 0 36px rgba(255,180,0,0.9); }
     }
 
-    /* ボタン */
-    .assign-btn {
+    /* ロック済み表示 */
+    .locked-notice {
       width: 100%;
-      margin-top: 12px;
-      padding: 14px;
+      margin-top: 10px;
+      background: #fff3e0;
+      border: 2px solid #ffb74d;
       border-radius: 12px;
+      padding: 10px 14px;
+      text-align: center;
+      color: #e65100;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    /* スタートボタン */
+    .start-btn {
+      margin-top: 16px;
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
       border: none;
-      background: linear-gradient(135deg, #1565c0, #0288d1);
+      background: linear-gradient(135deg, #1565c0, #1e88e5);
       color: #fff;
       font-family: 'Boogaloo', cursive;
-      font-size: clamp(1.1rem, 5vw, 1.4rem);
+      font-size: clamp(1.2rem, 5.5vw, 1.6rem);
       letter-spacing: 0.1em;
       cursor: pointer;
-      transition: transform 0.12s, box-shadow 0.12s;
-      box-shadow: 0 4px 16px #0288d166;
+      box-shadow: 0 4px 0 #0d3b7a, 0 6px 16px rgba(0,0,0,0.18);
+      transition: transform 0.1s, box-shadow 0.1s;
     }
-    .assign-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px #4fc3f788;
-    }
-    .assign-btn:active { transform: scale(0.97); }
-
-    /* ヒント */
-    .hint {
-      color: #546e7a;
-      font-size: 0.78rem;
-      text-align: center;
-      letter-spacing: 0.04em;
-      line-height: 1.6;
-      margin-top: 10px;
+    .start-btn:hover { transform: translateY(-2px); }
+    .start-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #0d3b7a, 0 3px 8px rgba(0,0,0,0.18);
     }
 
     /* 紙吹雪 */
@@ -217,14 +239,12 @@
     }
     .confetti-piece {
       position: absolute;
-      width: 9px;
-      height: 9px;
       border-radius: 2px;
       animation: confettiFall linear forwards;
     }
     @keyframes confettiFall {
       0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
-      100% { transform: translateY(105vh) rotate(540deg); opacity: 0; }
+      100% { transform: translateY(105vh) rotate(600deg); opacity: 0; }
     }
 
     /* ビンゴバースト */
@@ -239,21 +259,21 @@
     }
     .burst-ring {
       position: absolute;
-      width: 280px;
-      height: 280px;
+      width: 260px; height: 260px;
       border-radius: 50%;
-      border: 8px solid #FFD700;
+      border: 10px solid #FFD700;
       animation: ringExpand 0.7s ease-out forwards;
     }
     @keyframes ringExpand {
       from { transform: scale(0.2); opacity: 1; }
-      to   { transform: scale(3);   opacity: 0; }
+      to   { transform: scale(3.5); opacity: 0; }
     }
     .burst-text {
       font-family: 'Boogaloo', cursive;
-      font-size: clamp(2.5rem, 14vw, 5rem);
+      font-size: clamp(3rem, 16vw, 6rem);
       color: #FFD700;
-      text-shadow: 0 0 30px #FFD700, 0 0 60px #ff8f00, 0 4px 0 #b8860b;
+      -webkit-text-stroke: 3px #cc8800;
+      text-shadow: 0 0 30px #FFD700, 0 4px 0 #8a5c00;
       letter-spacing: 0.05em;
       text-align: center;
       z-index: 1;
@@ -268,55 +288,80 @@
     .shake { animation: shakeX 0.5s ease-in-out; }
     @keyframes shakeX {
       0%,100% { transform: translateX(0); }
-      20%     { transform: translateX(-8px); }
-      40%     { transform: translateX(8px); }
-      60%     { transform: translateX(-5px); }
-      80%     { transform: translateX(5px); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
     }
   </style>
 </head>
 <body>
 
-<div class="bg-glow"></div>
 <div class="confetti-wrap" id="confettiWrap"></div>
 
 <div class="app" id="app">
-  <div class="header">
-    <div class="header-title">
-      <span class="b1">B</span><span class="b2">I</span><span class="b3">N</span><span class="b4">G</span><span class="b5">O</span>
+  <div class="card" id="card">
+    <div class="stars">⭐ 🌟 ⭐ 🌟 ⭐</div>
+    <div class="bingo-title">BINGO</div>
+
+    <div class="grid-header">
+      <div class="col-label">B</div>
+      <div class="col-label">I</div>
+      <div class="col-label">N</div>
+      <div class="col-label">G</div>
+      <div class="col-label">O</div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="status-area">
+    <div class="status-box status-waiting" id="statusBox">
+      ボタンを押してスタート！
     </div>
   </div>
 
-  <div class="status-strip status-waiting" id="statusStrip">
-    数字を割り振ってスタート
+  <div id="lockedNotice" class="locked-notice" style="display:none;">
+    🔒 このカードは確定済みです。数字の変更はできません。
   </div>
 
-  <div class="grid-header">
-    <div class="col-label">B</div>
-    <div class="col-label">I</div>
-    <div class="col-label">N</div>
-    <div class="col-label">G</div>
-    <div class="col-label">O</div>
-  </div>
-
-  <div class="grid" id="grid"></div>
-
-  <button class="assign-btn" id="assignBtn" onclick="assignNumbers()">
-    🎲 数字を割り振る
+  <button class="start-btn" id="startBtn" onclick="startBingo()">
+    🎲 ビンゴカードを作る
   </button>
-
-  <p class="hint" id="hint">ボタンを押してビンゴカードの数字を決めよう</p>
 </div>
 
 <script>
   const SIZE = 5;
   const CENTER = 2;
+  const STORAGE_KEY = 'bingo_card_v1';
 
   let grid = null;
   let prevBingoCount = 0;
   let bingoCount = 0;
+  let isLocked = false;
 
-  function assignNumbers() {
+  // 起動時：保存済みカードがあれば読み込む
+  window.addEventListener('load', function() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        grid = data.grid;
+        prevBingoCount = data.prevBingoCount || 0;
+        bingoCount = countBingos();
+        isLocked = true;
+        lockCard();
+        renderGrid();
+        updateStatus();
+      } catch(e) {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  });
+
+  function startBingo() {
+    if (isLocked) return;
+
     const nums = new Set();
     while (nums.size < SIZE * SIZE - 1) {
       nums.add(Math.floor(Math.random() * 99) + 1);
@@ -336,10 +381,25 @@
     }
     prevBingoCount = 0;
     bingoCount = 0;
-    document.getElementById('assignBtn').textContent = '🔀 数字を振り直す';
-    document.getElementById('hint').textContent = '司会者が読んだ数字をタップしよう。真ん中は FREE！';
+    isLocked = true;
+
+    saveCard();
+    lockCard();
     renderGrid();
     updateStatus();
+  }
+
+  function lockCard() {
+    const btn = document.getElementById('startBtn');
+    btn.style.display = 'none';
+    document.getElementById('lockedNotice').style.display = 'block';
+  }
+
+  function saveCard() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      grid: grid,
+      prevBingoCount: prevBingoCount
+    }));
   }
 
   function tapCell(r, c) {
@@ -354,18 +414,15 @@
       fireConfetti();
       shakeApp();
     }
+    saveCard();
     renderGrid();
     updateStatus();
   }
 
   function getLines() {
     const lines = [];
-    for (let r = 0; r < SIZE; r++) {
-      lines.push([[r,0],[r,1],[r,2],[r,3],[r,4]]);
-    }
-    for (let c = 0; c < SIZE; c++) {
-      lines.push([[0,c],[1,c],[2,c],[3,c],[4,c]]);
-    }
+    for (let r = 0; r < SIZE; r++) lines.push([[r,0],[r,1],[r,2],[r,3],[r,4]]);
+    for (let c = 0; c < SIZE; c++) lines.push([[0,c],[1,c],[2,c],[3,c],[4,c]]);
     lines.push([[0,0],[1,1],[2,2],[3,3],[4,4]]);
     lines.push([[0,4],[1,3],[2,2],[3,1],[4,0]]);
     return lines;
@@ -379,9 +436,8 @@
   function getBingoCells() {
     const set = new Set();
     getLines().forEach(line => {
-      if (line.every(([r,c]) => grid[r][c].hit)) {
-        line.forEach(([r,c]) => set.add(r + '-' + c));
-      }
+      if (line.every(([r,c]) => grid[r][c].hit))
+        line.forEach(([r,c]) => set.add(r+'-'+c));
     });
     return set;
   }
@@ -398,13 +454,13 @@
 
         if (!grid) {
           div.classList.add('cell-empty');
-          div.textContent = '—';
+          div.textContent = '?';
         } else {
           const cell = grid[r][c];
           if (cell.free) {
             div.classList.add('cell-free');
             div.textContent = 'FREE';
-          } else if (bingoCells.has(r + '-' + c)) {
+          } else if (bingoCells.has(r+'-'+c)) {
             div.classList.add('cell-bingo');
             div.textContent = cell.num;
             div.onclick = () => tapCell(r, c);
@@ -424,16 +480,16 @@
   }
 
   function updateStatus() {
-    const el = document.getElementById('statusStrip');
+    const el = document.getElementById('statusBox');
     if (!grid) {
-      el.className = 'status-strip status-waiting';
-      el.textContent = '数字を割り振ってスタート';
+      el.className = 'status-box status-waiting';
+      el.textContent = 'ボタンを押してスタート！';
     } else if (bingoCount > 0) {
-      el.className = 'status-strip status-bingo';
+      el.className = 'status-box status-bingo';
       el.textContent = bingoCount === 1 ? '🎉 BINGO!!!' : '🎉 BINGO × ' + bingoCount;
     } else {
-      el.className = 'status-strip status-active';
-      el.textContent = '✦ 司会者が読んだ数字をタップ';
+      el.className = 'status-box status-active';
+      el.textContent = '✦ 司会者が読んだ数字をタップしよう';
     }
   }
 
@@ -448,26 +504,26 @@
     overlay.appendChild(ring);
     overlay.appendChild(text);
     document.body.appendChild(overlay);
-    setTimeout(() => overlay.remove(), 1500);
+    setTimeout(() => overlay.remove(), 1600);
   }
 
   function fireConfetti() {
     const wrap = document.getElementById('confettiWrap');
     wrap.innerHTML = '';
-    const colors = ['#FFD700','#ef5350','#66BB6A','#42A5F5','#AB47BC','#FFA726'];
-    for (let i = 0; i < 35; i++) {
+    const colors = ['#FFD700','#FF4444','#44BB44','#4488FF','#FF88FF','#FF8800'];
+    for (let i = 0; i < 40; i++) {
       const d = document.createElement('div');
       d.className = 'confetti-piece';
-      const size = 6 + Math.random() * 8;
+      const size = 7 + Math.random() * 9;
       d.style.cssText =
-        'left:' + (Math.random() * 100) + '%;' +
+        'left:' + (Math.random()*100) + '%;' +
         'background:' + colors[i % colors.length] + ';' +
-        'animation-duration:' + (1.0 + Math.random() * 1.0) + 's;' +
-        'animation-delay:' + (Math.random() * 0.5) + 's;' +
+        'animation-duration:' + (1.0 + Math.random()*1.2) + 's;' +
+        'animation-delay:' + (Math.random()*0.5) + 's;' +
         'width:' + size + 'px;height:' + size + 'px;';
       wrap.appendChild(d);
     }
-    setTimeout(() => { wrap.innerHTML = ''; }, 2500);
+    setTimeout(() => { wrap.innerHTML = ''; }, 2800);
   }
 
   function shakeApp() {
