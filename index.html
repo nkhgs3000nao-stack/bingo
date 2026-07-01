@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ダイスビンゴ スコアシート</title>
 <style>
   :root {
@@ -26,6 +26,11 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
     font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
     background: var(--felt);
@@ -34,16 +39,16 @@
       radial-gradient(circle at 80% 90%, rgba(212,165,61,0.05), transparent 40%);
     color: var(--text-light);
     min-height: 100vh;
-    padding: 16px;
+    padding: clamp(10px, 3vw, 16px);
   }
 
   header {
     text-align: center;
-    padding: 18px 0 22px;
+    padding: 14px 0 18px;
   }
 
   header h1 {
-    font-size: 1.9rem;
+    font-size: clamp(1.3rem, 6vw, 1.9rem);
     font-weight: 700;
     color: var(--brass-light);
     letter-spacing: 0.06em;
@@ -51,12 +56,13 @@
 
   header p {
     color: var(--text-muted);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     margin-top: 6px;
   }
 
   .game-area {
-    max-width: 560px;
+    max-width: 480px;
+    width: 100%;
     margin: 0 auto;
   }
 
@@ -64,16 +70,16 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   .round-tab {
-    padding: 8px 28px;
+    padding: 8px 24px;
     border-radius: 24px;
     border: 1.5px solid var(--border-line);
     background: var(--felt-2);
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
@@ -87,36 +93,40 @@
 
   .grid-wrapper {
     display: grid;
-    grid-template-columns: 48px repeat(5, 1fr) 48px;
-    grid-template-rows: 48px repeat(5, 1fr);
-    gap: 5px;
+    grid-template-columns: minmax(28px, 44px) repeat(5, 1fr) minmax(28px, 44px);
+    grid-template-rows: minmax(28px, 44px) repeat(5, 1fr);
+    gap: clamp(3px, 1.4vw, 5px);
+    width: 100%;
     margin-bottom: 8px;
   }
 
   .badge {
     background: var(--felt-3);
     border: 1px solid var(--brass-dark);
-    border-radius: var(--radius);
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 2px;
     text-align: center;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
   }
 
   .badge .score-val {
-    font-size: 1.15rem;
+    font-size: clamp(0.8rem, 3.6vw, 1.15rem);
     font-weight: 700;
     color: var(--brass-light);
     line-height: 1.1;
-    min-height: 1.2em;
   }
 
   .badge .score-lbl {
     color: var(--text-muted);
-    font-size: 0.58rem;
+    font-size: clamp(0.5rem, 2vw, 0.58rem);
     line-height: 1.1;
+    white-space: nowrap;
   }
 
   .diag { grid-row: 1; }
@@ -137,15 +147,6 @@
   #row-badge-3 { grid-row: 5; }
   #row-badge-4 { grid-row: 6; }
 
-  .main-grid {
-    grid-column: 2 / 7;
-    grid-row: 2 / 7;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 5px;
-  }
-
   .cell {
     aspect-ratio: 1;
     background: var(--cream);
@@ -155,6 +156,9 @@
     align-items: center;
     justify-content: center;
     transition: border-color 0.15s, box-shadow 0.15s;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .cell input {
@@ -164,12 +168,13 @@
     border: none;
     outline: none;
     text-align: center;
-    font-size: 2rem;
+    font-size: clamp(1rem, 6.5vw, 2rem);
     font-weight: 700;
     color: var(--ink);
     cursor: pointer;
     padding: 0;
     font-variant-numeric: tabular-nums;
+    min-width: 0;
   }
 
   .cell input::placeholder {
@@ -190,12 +195,12 @@
     border: none;
     border-radius: var(--radius);
     color: #241a05;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     cursor: pointer;
     letter-spacing: 0.03em;
     transition: background 0.2s, transform 0.1s;
-    margin: 18px 0 12px;
+    margin: 16px 0 10px;
   }
 
   .calc-btn:hover { background: var(--brass-light); }
@@ -209,10 +214,10 @@
     border: 1.5px solid var(--border-line);
     border-radius: var(--radius);
     color: var(--text-muted);
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     cursor: pointer;
     transition: border-color 0.2s, color 0.2s;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .reset-btn:hover { border-color: var(--burgundy-light); color: var(--burgundy-light); }
@@ -221,40 +226,42 @@
     background: var(--felt-2);
     border: 1px solid var(--border-line);
     border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 16px;
+    padding: 14px;
+    margin-bottom: 14px;
   }
 
   .totals-section h2 {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--text-muted);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .totals-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .total-card {
     background: var(--felt-3);
     border-radius: var(--radius);
-    padding: 10px;
+    padding: 8px 4px;
     text-align: center;
+    min-width: 0;
   }
 
   .total-card .t-label {
-    font-size: 0.7rem;
+    font-size: clamp(0.6rem, 2.6vw, 0.7rem);
     color: var(--text-muted);
     display: block;
     margin-bottom: 4px;
+    white-space: nowrap;
   }
 
   .total-card .t-value {
-    font-size: 1.6rem;
+    font-size: clamp(1.15rem, 5vw, 1.6rem);
     font-weight: 700;
     color: var(--brass-light);
   }
@@ -265,7 +272,7 @@
   }
 
   .total-card.highlight .t-value {
-    font-size: 2rem;
+    font-size: clamp(1.3rem, 6vw, 2rem);
     color: var(--burgundy-light);
   }
 
@@ -273,12 +280,12 @@
     background: var(--felt-2);
     border: 1px solid var(--border-line);
     border-radius: 12px;
-    padding: 16px;
+    padding: 14px;
     margin-top: 8px;
   }
 
   .rules-section h2 {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--text-muted);
@@ -287,7 +294,7 @@
 
   .rules-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
   }
 
@@ -298,27 +305,29 @@
     padding: 5px 8px;
     background: var(--felt-3);
     border-radius: 6px;
-    font-size: 0.76rem;
+    font-size: 0.72rem;
+    min-width: 0;
+    gap: 4px;
   }
 
-  .rule-row .r-name { color: var(--text-muted); }
+  .rule-row .r-name {
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .rule-row .r-pts {
     font-weight: 700;
     color: var(--brass-light);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
+    flex-shrink: 0;
   }
 
   .hint-text {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: var(--text-muted);
     text-align: center;
     margin-top: 6px;
-  }
-
-  @media (max-width: 400px) {
-    header h1 { font-size: 1.5rem; }
-    .cell input { font-size: 1.5rem; }
-    .badge .score-val { font-size: 0.95rem; }
   }
 </style>
 </head>
@@ -335,7 +344,7 @@
     <button class="round-tab" id="tab2" onclick="switchRound(2)">第2回</button>
   </div>
 
-  <div class="grid-wrapper">
+  <div class="grid-wrapper" id="gridWrapper">
     <div class="badge diag" id="diag-tl">
       <span class="score-val" id="diagTLVal"></span>
       <span class="score-lbl">斜め↘</span>
@@ -349,8 +358,6 @@
       <span class="score-val" id="diagTRVal"></span>
       <span class="score-lbl">斜め↙</span>
     </div>
-
-    <div class="main-grid" id="mainGrid"></div>
 
     <div class="badge row-badge" id="row-badge-0"><span class="score-val" id="row0"></span><span class="score-lbl">行1</span></div>
     <div class="badge row-badge" id="row-badge-1"><span class="score-val" id="row1"></span><span class="score-lbl">行2</span></div>
@@ -404,12 +411,18 @@ const roundTotals = { 1: null, 2: null };
 let currentRound = 1;
 
 function buildGrid() {
-  const grid = document.getElementById('mainGrid');
-  grid.innerHTML = '';
+  const wrapper = document.getElementById('gridWrapper');
+  document.querySelectorAll('.cell').forEach(el => el.remove());
+
   for (let i = 0; i < 25; i++) {
+    const r = Math.floor(i / 5);
+    const c = i % 5;
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.id = 'cell-' + i;
+    cell.style.gridColumn = (c + 2).toString();
+    cell.style.gridRow = (r + 2).toString();
+
     const inp = document.createElement('input');
     inp.type = 'text';
     inp.inputMode = 'numeric';
@@ -424,7 +437,7 @@ function buildGrid() {
     });
     if (roundData[currentRound][i]) cell.className = 'cell filled';
     cell.appendChild(inp);
-    grid.appendChild(cell);
+    wrapper.appendChild(cell);
   }
 }
 
