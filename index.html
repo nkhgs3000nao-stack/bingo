@@ -405,10 +405,35 @@
 </div>
 
 <script>
-const roundData = { 1: Array(25).fill(''), 2: Array(25).fill('') };
-const roundScores = { 1: null, 2: null };
-const roundTotals = { 1: null, 2: null };
+const STORAGE_KEY = 'diceBingoState_v1';
+
+let roundData = { 1: Array(25).fill(''), 2: Array(25).fill('') };
+let roundScores = { 1: null, 2: null };
+let roundTotals = { 1: null, 2: null };
 let currentRound = 1;
+
+function saveState() {
+  try {
+    const state = { roundData, roundScores, roundTotals, currentRound };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.error('保存に失敗しました', e);
+  }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const state = JSON.parse(raw);
+    if (state.roundData) roundData = state.roundData;
+    if (state.roundScores) roundScores = state.roundScores;
+    if (state.roundTotals) roundTotals = state.roundTotals;
+    if (state.currentRound) currentRound = state.currentRound;
+  } catch (e) {
+    console.error('復元に失敗しました', e);
+  }
+}
 
 function buildGrid() {
   const wrapper = document.getElementById('gridWrapper');
@@ -434,6 +459,7 @@ function buildGrid() {
       e.target.value = v;
       roundData[currentRound][i] = v;
       cell.className = v ? 'cell filled' : 'cell';
+      saveState();
     });
     if (roundData[currentRound][i]) cell.className = 'cell filled';
     cell.appendChild(inp);
@@ -513,6 +539,7 @@ function calculate() {
   renderScores(scores);
   document.getElementById('total' + currentRound).textContent = total + '点';
   updateGrandTotal();
+  saveState();
 }
 
 function renderScores(scores) {
@@ -553,6 +580,7 @@ function switchRound(n) {
   document.getElementById('tab2').className = 'round-tab' + (n === 2 ? ' active' : '');
   buildGrid();
   renderScores(roundScores[currentRound]);
+  saveState();
 }
 
 function resetCurrent() {
@@ -564,9 +592,14 @@ function resetCurrent() {
   updateGrandTotal();
   buildGrid();
   clearScoreDisplay();
+  saveState();
 }
 
-buildGrid();
+loadState();
+if (roundTotals[1] !== null) document.getElementById('total1').textContent = roundTotals[1] + '点';
+if (roundTotals[2] !== null) document.getElementById('total2').textContent = roundTotals[2] + '点';
+updateGrandTotal();
+switchRound(currentRound);
 </script>
 </body>
 </html>
